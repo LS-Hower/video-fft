@@ -9,39 +9,19 @@
 
 ## 1. 环境
 
-Python 3.13.14；ffmpeg 7.1.1（已在 PATH）；GPU RTX 4060 Laptop。manimgl **尚未安装**，源码在 `../reference/manim`（MIT）。
+Python 3.13.14；ffmpeg 7.1.1（已在 PATH）；GPU RTX 4060 Laptop。manimgl 已装在 `.venv`（1.7.2，`pip install -e` 本地源码，保证与 reference 的 API 一致）：
 
 ```bash
 python -m venv .venv
 source .venv/Scripts/activate      # cmd/PowerShell：.venv\Scripts\activate
-pip install -e ../reference/manim  # 装本地源码，保证与 reference 的 API 一致
-pip install av                     # 当前 requirements 未自动装齐，需手动补
+pip install -e ../reference/manim
+pip install av                     # requirements 未自动装齐，需手动补
 python -m manimlib --version
 ```
 
-首次装完要验证三件事，缺一项后面都会反复踩：
+已验证三件事，换机器后要重验：`example_scenes` 能出画面；`Text("复数", font=CH_FONT)` 不是豆腐块；`Tex(R"\omega_n^{k}")` 能编译（本机用 TeX Live 2026；Windows 备选 MiKTeX）。
 
-- `manimgl ../reference/manim/example_scenes.py OpeningManimExample -l` 能出画面；
-- 中文能出字：最小场景里 `Text("复数", font=CH_FONT)` 不是豆腐块（字体常量在 `utils/theme.py`）；
-- 公式能编译：`Tex(R"\omega_n^{k}")` 可用，不行就装 LaTeX 发行版（Windows 推荐 MiKTeX）。
-
-仓库根需要 `custom_config.yml`（尚未创建）：
-
-```yaml
-directories:
-  mirror_module_path: False        # 输出平铺到 videos/，不照抄模块路径
-  base: ""
-  subdirs:
-    output: "videos"
-    raster_images: "assets/raster_images"
-    vector_images: "assets/vector_images"
-    data: "assets/data"
-camera:
-  resolution: (1920, 1080)
-  fps: 30
-```
-
-`../reference/videos/custom_config.yml` 是 macOS 绝对路径 + 4K + 3b1b 私有资源树，不要照抄。
+仓库根的 `custom_config.yml` 已创建（1080p30、深色背景、平铺输出到 `videos/`）。`../reference/videos/custom_config.yml` 是 macOS 绝对路径 + 4K + 3b1b 私有资源树，不要照抄。
 
 ---
 
@@ -109,7 +89,10 @@ python -m manimlib scenes/ch01_complex.py SceneX -w -n 3,6            # 只渲�
 | `x_min` / `x_max` / `coords_to_point` / `add_numbers()` | `x_range` / `c2p` / `add_coordinate_labels()` |
 | `FadeInFromDown` 等 deprecated 动画 | `FadeIn(mob, UP)` / `FadeOut(mob, DOWN)` |
 
-**类型约束**：`GlowDot` / `GlowDots` / `TrueDot` 是 `PMobject`，**不能**进 `VGroup`（要么用 `Group`，要么改用 `Dot`）。
+**类型约束**：
+- `GlowDot` / `GlowDots` / `TrueDot` 是 `PMobject`，**不能**进 `VGroup`（要么用 `Group`，要么改用 `Dot`）。
+- `Circle` 是 `Arc` 的子类；按 `isinstance(m, Arc)` 批量清理会误删单位圆。清弧只清自己建的那一组（建的时候收进 `VGroup` 再 `FadeOut`）。
+- manimgl 没有 `Angle` / `RightAngle`，辐角弧用 `Arc(start_angle, angle, radius, arc_center)` 手搭（工厂在 `utils/mobjects.py`）。
 
 ---
 

@@ -24,8 +24,10 @@ TINY = 18           # 脚注、下标说明
 
 # ------------------------------------------------------------------ 配色
 
-EVEN_COLOR = BLUE_D      # 偶数项 / 左半
-ODD_COLOR = GREEN_D      # 奇数项 / 右半
+EVEN_COLOR = BLUE_C      # 偶数项 / 左半（BLUE_D 在深色背景上偏暗，统一用 C 档）
+ODD_COLOR = GREEN_C      # 奇数项 / 右半
+Z_COLOR = EVEN_COLOR     # 第一章的第一个操作数 z，沿用同一套蓝/绿
+W_COLOR = ODD_COLOR      # 第一章的第二个操作数 w
 ROOT_COLOR = TEAL_C      # 单位根
 ACCENT = YELLOW_C        # 唯一的强调色（一根打通全片）
 SUM_COLOR = RED_C        # 求和/重心/负号支
