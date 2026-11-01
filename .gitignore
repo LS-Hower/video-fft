@@ -218,3 +218,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Manim render output
+videos/
+*.mp4
+*.mov
