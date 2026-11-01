@@ -15,7 +15,8 @@ Python 3.13.14；ffmpeg 7.1.1（已在 PATH）；GPU RTX 4060 Laptop。manimgl *
 python -m venv .venv
 source .venv/Scripts/activate      # cmd/PowerShell：.venv\Scripts\activate
 pip install -e ../reference/manim  # 装本地源码，保证与 reference 的 API 一致
-manimgl --version
+pip install av                     # 当前 requirements 未自动装齐，需手动补
+python -m manimlib --version
 ```
 
 首次装完要验证三件事，缺一项后面都会反复踩：
@@ -70,17 +71,19 @@ camera:
 
 ## 3. 命令
 
+**始终用 `python -m manimlib`，不用 `manimgl` 可执行脚本** —— 后者不把当前目录放进 `sys.path`，`from utils.theme import *` 会 ModuleNotFoundError。
+
 ```bash
-manimgl scenes/ch01_complex.py ProductAsRotation -l        # 480p 预览
-manimgl scenes/ch01_complex.py ProductAsRotation -s        # 只存最后一帧（排错最快）
-manimgl scenes/ch01_complex.py ProductAsRotation -w        # 渲染到 videos/
-manimgl scenes/ch01_complex.py ProductAsRotation -w -o     # 渲染完自动打开
-manimgl scenes/ch01_complex.py ProductAsRotation -e 120    # 第 120 行进交互式 iPython（旧写法 -se）
-manimgl scenes/ch01_complex.py -a -l -w                    # 整文件所有场景
-manimgl scenes/ch01_complex.py SceneX -w -n 3,6            # 只渲染第 3~6 个动画
+python -m manimlib scenes/ch01_complex.py ProductAsRotation -l        # 480p 预览（开窗）
+python -m manimlib scenes/ch01_complex.py ProductAsRotation -w -s     # 只存最后一帧（排错最快）
+python -m manimlib scenes/ch01_complex.py ProductAsRotation -w        # 渲染 mp4 到 videos/
+python -m manimlib scenes/ch01_complex.py ProductAsRotation -w -o     # 渲染完自动打开
+python -m manimlib scenes/ch01_complex.py ProductAsRotation -e 120    # 第 120 行进交互式 iPython（旧写法 -se）
+python -m manimlib scenes/ch01_complex.py -a -l -w                    # 整文件所有场景
+python -m manimlib scenes/ch01_complex.py SceneX -w -n 3,6            # 只渲染第 3~6 个动画
 ```
 
-`-p` 在这个版本是 presenter mode，**不是** preview。交互式下 `checkpoint_paste()` 的用法见 `../reference/videos/README.md`。
+`-p` 在这个版本是 presenter mode，**不是** preview。只加 `-s` 不加 `-w` 会开窗等待交互；离线出图必须 `-w -s`。交互式下 `checkpoint_paste()` 的用法见 `../reference/videos/README.md`。
 
 ---
 
@@ -105,6 +108,8 @@ manimgl scenes/ch01_complex.py SceneX -w -n 3,6            # 只渲染第 3~6 �
 | `MathTex` | `Tex` |
 | `x_min` / `x_max` / `coords_to_point` / `add_numbers()` | `x_range` / `c2p` / `add_coordinate_labels()` |
 | `FadeInFromDown` 等 deprecated 动画 | `FadeIn(mob, UP)` / `FadeOut(mob, DOWN)` |
+
+**类型约束**：`GlowDot` / `GlowDots` / `TrueDot` 是 `PMobject`，**不能**进 `VGroup`（要么用 `Group`，要么改用 `Dot`）。
 
 ---
 

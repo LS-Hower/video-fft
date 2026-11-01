@@ -1,0 +1,16 @@
+directories:
+  mirror_module_path: False
+  base: ""
+  subdirs:
+    output: "videos"
+    raster_images: "assets/raster_images"
+    vector_images: "assets/vector_images"
+    data: "assets/data"
+camera:
+  resolution: (1920, 1080)
+  background_color: "#111111"
+  fps: 30
+scene:
+  default_wait_time: 1.0
+text:
+  alignment: "CENTER"

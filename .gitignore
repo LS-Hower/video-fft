@@ -221,5 +221,6 @@ __marimo__/
 
 # Manim render output
 videos/
+latex_cache/
 *.mp4
 *.mov
