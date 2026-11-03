@@ -20,7 +20,7 @@ pip install -r requirements.txt
 python -m manimlib --version      # ManimGL v1.7.2
 ```
 
-`requirements.txt` 把 `3b1b/manim` 固定在 commit `fafa083`（2026-09-09，见 `materials.md`）。**不要用 PyPI 的 `manimgl==1.7.2`**：那是 2024-12 发布版，与本项目场景代码依据的 API 不是同一套，且在 Python 3.13 下 import 直接失败（`pkg_resources` 已移除、`pydub` 依赖的 `pyaudioop` 在 3.13 已删除）。`av` 上游没带齐，必须显式补装。
+`requirements.txt` 把 `3b1b/manim` 固定在 commit `fafa083`（2026-09-09，出处见 `materials.md`）：执行 `pip install -r requirements.txt` 即从 GitHub 下载该 commit 的源码并安装。升级 manim 时同步更新这个 commit，并复验 `scenes/` 下的场景。`av` 上游没带齐，需显式补装。
 
 重装环境后要重验三件事：`python -m manimlib scenes/ch01_complex.py ProductAsRotation -w -s` 能出画面（不要用 `example_scenes.py`，它不在 pip 安装的包里）；中文 `Text` 不是豆腐块；`Tex` 公式能编译（本机用 TeX Live 2026；Windows 备选 MiKTeX）。
 

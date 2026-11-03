@@ -15,7 +15,7 @@ pip install -r requirements.txt
 python -m manimlib --version      # ManimGL v1.7.2
 ```
 
-依赖全部从网络安装，**不需要**本机存在 `reference/` 目录。
+依赖全部从网络安装：manimgl 由 `requirements.txt` 从 GitHub 下载固定 commit `fafa083` 的源码安装（出处见 `materials.md`）。**不需要**本机存在 `reference/` 目录。
 
 ## 项目约定
 
