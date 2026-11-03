@@ -3,32 +3,40 @@
 讲快速傅里叶变换（FFT）的中文科普视频。用 3b1b 版 Manim（`manimgl`，不是 ManimCommunity）写场景代码并渲染成片。
 
 `script.md` 是内容的事实源：镜头设计、数学推导、口播文本都在那里，代码是它的实现。要改镜头，先改脚本。
-`../reference/` 只读，不要改动其中的任何文件。
+本机的 `../reference/` 若存在，只是一份可选的只读资料快照，**不是项目依赖**；clone 本仓库不需要它，也不要改动其中文件。资料出处与固定 commit 见 `materials.md`。
 
 ---
 
 ## 1. 环境
 
-Python 3.13.14；ffmpeg 7.1.1（已在 PATH）；GPU RTX 4060 Laptop。manimgl 已装在 `.venv`（1.7.2，`pip install -e` 本地源码，保证与 reference 的 API 一致）：
+**仅支持 Windows**：协作双方均使用 Windows，字体常量（`Microsoft YaHei` / `Consolas`）、venv 激活脚本、路径分隔符、ffmpeg 与 LaTeX 安装方式都按 Windows 约定，不做跨平台适配。Python 3.13.14；ffmpeg 7.1.1（已在 PATH）；GPU RTX 4060 Laptop。
+
+依赖由 `requirements.txt` **从网络安装**，不从本地 manim 仓库构建：
 
 ```bash
 python -m venv .venv
 source .venv/Scripts/activate      # cmd/PowerShell：.venv\Scripts\activate
-pip install -e ../reference/manim
-pip install av                     # requirements 未自动装齐，需手动补
-python -m manimlib --version
+pip install -r requirements.txt
+python -m manimlib --version      # ManimGL v1.7.2
 ```
 
-已验证三件事，换机器后要重验：`example_scenes` 能出画面；`Text("复数", font=CH_FONT)` 不是豆腐块；`Tex(R"\omega_n^{k}")` 能编译（本机用 TeX Live 2026；Windows 备选 MiKTeX）。
+`requirements.txt` 把 `3b1b/manim` 固定在 commit `fafa083`（2026-09-09，见 `materials.md`）。**不要用 PyPI 的 `manimgl==1.7.2`**：那是 2024-12 发布版，与本项目场景代码依据的 API 不是同一套，且在 Python 3.13 下 import 直接失败（`pkg_resources` 已移除、`pydub` 依赖的 `pyaudioop` 在 3.13 已删除）。`av` 上游没带齐，必须显式补装。
 
-仓库根的 `custom_config.yml` 已创建（1080p30、深色背景、平铺输出到 `videos/`）。`../reference/videos/custom_config.yml` 是 macOS 绝对路径 + 4K + 3b1b 私有资源树，不要照抄。
+重装环境后要重验三件事：`python -m manimlib scenes/ch01_complex.py ProductAsRotation -w -s` 能出画面（不要用 `example_scenes.py`，它不在 pip 安装的包里）；中文 `Text` 不是豆腐块；`Tex` 公式能编译（本机用 TeX Live 2026；Windows 备选 MiKTeX）。
+
+仓库根的 `custom_config.yml` 已创建（1080p30、深色背景、平铺输出到 `videos/`）。`3b1b/videos` 自带的 `custom_config.yml` 是 macOS 绝对路径 + 4K + 私有资源树，不要照抄。
 
 ---
 
 ## 2. 目录
 
 ```
-├── script.md              # 内容脚本
+├── README.md              # 入口、上手命令
+├── AGENTS.md              # 开发约定
+├── script.md              # 内容脚本（唯一事实源）
+├── script_raw.md          # 原始草稿，仅存档
+├── materials.md           # 参考资料出处、固定 commit、许可
+├── requirements.txt       # 依赖（从网络安装）
 ├── custom_config.yml
 ├── utils/
 │   ├── theme.py           # 颜色 / 字号 / 中英文字体常量
@@ -63,7 +71,7 @@ python -m manimlib scenes/ch01_complex.py -a -l -w                    # 整文�
 python -m manimlib scenes/ch01_complex.py SceneX -w -n 3,6            # 只渲染第 3~6 个动画
 ```
 
-`-p` 在这个版本是 presenter mode，**不是** preview。只加 `-s` 不加 `-w` 会开窗等待交互；离线出图必须 `-w -s`。交互式下 `checkpoint_paste()` 的用法见 `../reference/videos/README.md`。
+`-p` 在这个版本是 presenter mode，**不是** preview。只加 `-s` 不加 `-w` 会开窗等待交互；离线出图必须 `-w -s`。交互式下 `checkpoint_paste()` 的用法见 `3b1b/videos` 仓库 README。
 
 ---
 
@@ -78,7 +86,7 @@ python -m manimlib scenes/ch01_complex.py SceneX -w -n 3,6            # 只渲�
 - 排布只用 `.arrange()` / `.next_to()` / `.get_grid()`，不手算坐标；复用构件写成模块级 `get_*` 工厂函数。
 - **数值诚实**：画面上的 DFT/FFT 结果、频谱曲线、蝴蝶图数值必须由 `utils/fft.py` 现算并与 `np.fft` 对照通过，不许为了好看挪数据点。
 
-**旧 manim 写法黑名单**（照抄 reference 老代码会静默失效或报错）
+**旧 manim 写法黑名单**（照抄 `3b1b/videos` 的老场景代码会静默失效或报错）
 
 | 禁用 | 改用 |
 | --- | --- |
@@ -96,31 +104,33 @@ python -m manimlib scenes/ch01_complex.py SceneX -w -n 3,6            # 只渲�
 
 ---
 
-## 5. 参考资料（`../reference/`，只读）
+## 5. 参考资料
 
-| 路径 | 用途 |
+出处（URL、固定 commit、许可）统一列在 `materials.md`。下表的路径均指**对应仓库内的相对路径**，行号以 `materials.md` 里的 commit 为准；本机不需要存在 `reference/` 目录。
+
+| 仓库 | 用途 |
 | --- | --- |
-| `manim/` | manimgl 源码（MIT）。API 的一手真相，写不出效果时先查 `manimlib/mobject/`、`manimlib/animation/` |
-| `videos/` | 3b1b 全部视频源码（**CC BY-NC-SA 4.0**，见 §6） |
-| `manim_sandbox/` | manim-kindergarten 合集（MIT）。主要查中文字体用法，如 `utils/mobjects/fractal_tree.py:56` 用 `思源黑体 Bold`；非 3b1b 体系，写法不一定对齐本仓库 |
-| `Fast-Fourier-transform.wiki` | FFT 维基条目 wikitext 源文件。**所有年份、人名、复杂度数字的一手出处**：History 在第 16 行，复杂度上下界在第 71 行 |
-| `An-explicit-power-saving-...-September-25-2026/` | OpenAI Math Release 预印本（2026-09-25）。主定理在 `build/sections/introduction.tex`，措辞要求见 §7 |
+| `3b1b/manim` | manimgl 源码（MIT）。API 的一手真相，写不出效果时先查 `manimlib/mobject/`、`manimlib/animation/` |
+| `3b1b/videos` | 3b1b 全部视频源码（**CC BY-NC-SA 4.0**，见 §6） |
+| `manim-kindergarten/manim_sandbox` | 中文字体用法参考，如 `utils/mobjects/fractal_tree.py:56` 的 `思源黑体 Bold`；非 3b1b 体系，写法不一定对齐本仓库 |
+| 维基条目 wikitext | **所有年份、人名、复杂度数字的一手出处**：History 在第 16 行，复杂度上下界在第 71 行 |
+| OpenAI 预印本 | 2026-09-25 预印本。主定理在 `build/sections/introduction.tex`，措辞要求见 §7 |
 
-### 可复用资产（均已核实存在，行号可能随代码更新漂移）
+### 可复用资产（均在 `3b1b/videos` 内，行号以固定 commit 为准）
 
-| 位置 | 名称 | 用途 |
+| 路径 | 名称 | 用途 |
 | --- | --- | --- |
-| `videos/_2022/convolutions/discrete.py:2468` | `RootsOfUnity` | 单位根画法：`ComplexPlane` + 单位圆 + `np.exp(TAU*1j*k/N)` + `GlowDot` |
-| `videos/_2020/18S191/dft.py:4` | `IntroduceDFT` | DFT 的离散"缠绕"演示，与本项目第 2 章最贴近 |
-| `videos/_2019/diffyq/part2/fourier_series.py:5` | `FourierCirclesScene` | epicycle 旋转向量链（`get_rotating_vectors` :66、`get_vector_sum_path` :139、`get_coefficients_of_path` :240） |
-| `videos/_2018/fourier.py:792` | `FourierMachineScene` | 时域轴/圆平面/频域轴三分屏骨架（:961 缠绕、:3210 质心直觉） |
-| `videos/_2022/piano/fourier_animations.py:294` | `break_down_into_fourier_components` | np.fft → 频谱 → 分解正弦波的完整实现 |
-| `videos/_2022/convolutions/discrete.py` | `BigPolynomials` :1862、`ContrastConvolutionToMultiplication` :1738、`AlgorithmOutline` :2534、`dist_to_bars` :50 | 系数网格表、卷积↔乘法对照、快速卷积四步框架、条形图三件套 |
+| `_2022/convolutions/discrete.py:2468` | `RootsOfUnity` | 单位根画法：`ComplexPlane` + 单位圆 + `np.exp(TAU*1j*k/N)` + `GlowDot` |
+| `_2020/18S191/dft.py:4` | `IntroduceDFT` | DFT 的离散"缠绕"演示，与本项目第 2 章最贴近 |
+| `_2019/diffyq/part2/fourier_series.py:5` | `FourierCirclesScene` | epicycle 旋转向量链（`get_rotating_vectors` :66、`get_vector_sum_path` :139、`get_coefficients_of_path` :240） |
+| `_2018/fourier.py:792` | `FourierMachineScene` | 时域轴/圆平面/频域轴三分屏骨架（:961 缠绕、:3210 质心直觉） |
+| `_2022/piano/fourier_animations.py:294` | `break_down_into_fourier_components` | np.fft → 频谱 → 分解正弦波的完整实现 |
+| `_2022/convolutions/discrete.py` | `BigPolynomials` :1862、`ContrastConvolutionToMultiplication` :1738、`AlgorithmOutline` :2534、`dist_to_bars` :50 | 系数网格表、卷积↔乘法对照、快速卷积四步框架、条形图三件套 |
 
 **已知坑**
 
 - `_2018/`、`_2019/` 是老版本代码：`FourierMachineScene.CONFIG`、`FourierCirclesScene.CONFIG` 会被静默忽略，坐标用旧参数名。借鉴时必须按 §4 黑名单改造。
-- `videos/_2022/convolutions/discrete.py:2792` 的 `FourierCoefficients` 有 bug（`equations = VGroup` 把类赋给了变量），别抄。
+- `_2022/convolutions/discrete.py:2792` 的 `FourierCoefficients` 有 bug（`equations = VGroup` 把类赋给了变量），别抄。
 - `once_useful_constructs/` 多数文件自述失效（`region.py`、`graph_scene.py`、`complex_transformation_scene.py` 等），要用得先通读再改写。
 - `once_useful_constructs/butterfly_curve.py` 的"蝴蝶曲线"与 FFT 蝴蝶运算无关。
 
@@ -128,15 +138,15 @@ python -m manimlib scenes/ch01_complex.py SceneX -w -n 3,6            # 只渲�
 
 ## 6. 许可
 
-- `reference/videos/` 是 **CC BY-NC-SA 4.0**（含非商业条款）。借鉴思路没问题；需要现成构件时读懂后在 `utils/` 里重写，并在文件头注明 `参考 3b1b/videos/<文件>:<行号> (CC BY-NC-SA 4.0)，已重写`。
-- `reference/manim/`（MIT）是库本身，可作为正常依赖使用。
+- `3b1b/videos`（**CC BY-NC-SA 4.0**，含非商业条款）。借鉴思路没问题；需要现成构件时读懂后在 `utils/` 里重写，并在文件头注明 `参考 3b1b/videos/<文件>:<行号> (CC BY-NC-SA 4.0)，已重写`。本仓库是 public 的，不要整段搬。
+- `3b1b/manim`（MIT）、`manim-kindergarten/manim_sandbox`（MIT）是库/参考集合，由 `requirements.txt` 从网络安装或按 `materials.md` 出处查阅。
 - `assets/` 里的第三方图片、字体先确认许可再用。
 
 ---
 
 ## 7. 事实核查
 
-1. 历史、人名、年份、复杂度数字必须能在 §5 那两份 reference 原文里定位到出处；查不到就在 `script.md` 里标 `[待核]`，不凭印象写。
+1. 历史、人名、年份、复杂度数字必须能在 `materials.md` 列出的维基 wikitext / 预印本原文里定位到出处；查不到就在 `script.md` 里标 `[待核]`，不凭印象写。
 2. 预印本就说预印本 —— 用"作者宣称 / 尚待同行评议"，禁止写"已证明""已被突破"。
 3. 提 2026-09-25 那份 OpenAI 预印本时，三条限定必须同时交代：精确复数运算模型允许任意大中间系数；常数极大、没有可用的 crossover 估计；不意味着浮点实现或实际算力有相应提升。
 4. 上界与下界不许混用。Ω(n log n) 下界只在受限模型下成立（Morgenstern 1973 有界系数、Pan 1986 异步度、Papadimitriou 1979 算法图结构），无条件下界仍是开放问题；那份预印本攻的是**上界**。
@@ -155,6 +165,8 @@ python -m manimlib scenes/ch01_complex.py SceneX -w -n 3,6            # 只渲�
 
 ## 9. 约定与待定
 
+- **仅支持 Windows**，不做跨平台适配（理由见 §1）。协作者同平台；若将来要支持别的平台，先改 §1 与 `utils/theme.py` 的字体常量。
+- 依赖一律由 `requirements.txt` 从网络安装，不从本地 manim 仓库构建；项目不依赖 `../reference/`，资料出处见 `materials.md`。
 - 视频时长当前估算 ≈ 22 分钟（主干 16 分 + 背景 5 分 + 头尾 1 分），**仅用于排布参考**：制作过程中按内容需要随时调整，不要为了贴合时长砍内容；有变动就同步更新 `script.md` 的时长标注。
 - 单支，不成系列。
 - 全中文解说，公式保留拉丁/希腊符号；中文文本字体由 `utils/theme.py` 的 `CH_FONT` 统一决定。

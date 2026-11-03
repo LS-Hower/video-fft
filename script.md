@@ -3,6 +3,7 @@
 > 版本 v0.2 · 2026-11-01 · 状态：**初稿完成，可开工**
 > 本文件是内容的唯一事实源。场景代码的镜头设计、数学推导、口播文本都以此为准；
 > 场景类一旦定名，要回填到本文件对应小节标题旁。开发约定见 `AGENTS.md`。
+> 各小节「参考」里的路径 / 文件名均指 `materials.md` 所列出处（仓库内相对路径，行号以其中固定 commit 为准），本机不需要存在 `reference/` 目录。
 
 ---
 
@@ -58,7 +59,7 @@
 > 机器没变快，编译器也没变聪明，变的只是我们走的那条路。
 > 今天要讲的，就是这条路：快速傅里叶变换。
 
-**参考**：`reference/Fast-Fourier-transform.wiki` Definition 段（原文给的 n = 4096 运算计数：约 3000 万 vs 约 7 万）。
+**参考**：`Fast-Fourier-transform.wiki` 的 Definition 段（原文给的 n = 4096 运算计数：约 3000 万 vs 约 7 万）。
 
 ---
 
@@ -88,7 +89,7 @@
 > 两个数相乘的时候，模长相乘，辐角相加——
 > 也就是说，乘法是"先拉伸，再旋转"。
 
-**参考**：`manimlib` 的 `ComplexPlane`；复平面 + `n2p` + updater 的现代写法见 `reference/videos/_2025/laplace/exponentials.py:915`。
+**参考**：`manimlib` 的 `ComplexPlane`；复平面 + `n2p` + updater 的现代写法见 `3b1b/videos/_2025/laplace/exponentials.py:915`。
 
 ## 1.2 `QuotientGeometry` · ~0:45
 
@@ -148,7 +149,7 @@
 >
 > 整个算法能一层层往下拆，原因就藏在这一格里。
 
-**参考**：`reference/videos/_2022/convolutions/discrete.py:2468` `RootsOfUnity`（单位圆 + `GlowDot` + 周期性演示，照这个思路在本仓库重写）。
+**参考**：`3b1b/videos/_2022/convolutions/discrete.py:2468` `RootsOfUnity`（单位圆 + `GlowDot` + 周期性演示，照这个思路在本仓库重写）。
 **注意**：该场景依赖旧 manim 的 `CONFIG` 字典，移植时必须把其中的参数改成类属性（见 AGENTS.md §5）。
 
 ---
@@ -183,7 +184,7 @@
 >
 > 那么问题变成：**如果能在两种表示之间快速来回，乘法就变便宜了。**
 
-**参考**：配对网格见 `reference/videos/_2022/convolutions/discrete.py:1862` `BigPolynomials`；四步框架见 `:2534` `AlgorithmOutline`。
+**参考**：配对网格见 `3b1b/videos/_2022/convolutions/discrete.py:1862` `BigPolynomials`；四步框架见 `:2534` `AlgorithmOutline`。
 
 ## 2.2 `ConvolutionView` · ~1:00
 
@@ -196,7 +197,7 @@
 > 再细看那些乘法：所有下标和为 k 的配对，加到一起，就是第 k 项系数。
 > 这就是卷积。系数表示下的多项式乘法，本质上就是一次卷积。
 
-**参考**：`reference/videos/_2022/convolutions/discrete.py:1738` `ContrastConvolutionToMultiplication`。
+**参考**：`3b1b/videos/_2022/convolutions/discrete.py:1738` `ContrastConvolutionToMultiplication`。
 
 ## 2.3 `DefineDFT` · ~1:30
 
@@ -207,7 +208,7 @@
 - 承接 1.4 的单位圆：就用这 n 个单位根当取值点（旁边留一个醒目的问号："为什么偏偏是这 n 个点？答案在第 3 章"）。
 - 逐项动画 `X_k = Σ_{m=0}^{n−1} x_m · ω_n^{−km}`，k = 0…n−1：
   - 几何解读：把输入序列按 ω 的幂铺成 n 个位置，再整体依次反向转 k 格，取这些向量的**重心**（质心点在圆内滑动演示）；
-  - 这里直接呼应 `reference/videos/_2020/18S191/dft.py:4` 的"缠绕"画法。
+  - 这里直接呼应 `3b1b/videos/_2020/18S191/dft.py:4` 的"缠绕"画法。
 - 屏幕角落同时出现矩阵形式 `X = F x`，F 的第 (k, m) 元是 ω^{km}。
 - 逆变换：**同一套动作**，把 ω 换成 ω^{−1}，最后除以 n（用 1.2 的除法语义在屏幕上解释这个 1/n）。
 - 最后红字：`按定义算 = O(n²)`。
@@ -223,7 +224,7 @@
 > 至于为什么偏偏挑这 n 个点——先卖个关子。
 > 唯一的问题是，按这个定义直接算，是 n² 次运算。
 
-**参考**：`reference/videos/_2020/18S191/dft.py:4` `IntroduceDFT`；质心直觉见 `reference/videos/_2018/fourier.py:3210` `ScaleUpCenterOfMass`。
+**参考**：`3b1b/videos/_2020/18S191/dft.py:4` `IntroduceDFT`；质心直觉见 `3b1b/videos/_2018/fourier.py:3210` `ScaleUpCenterOfMass`。
 
 ---
 
@@ -337,7 +338,7 @@
 >
 > 这类结构天然适配硬件和 SIMD，这也是它六十年没被淘汰的原因。
 
-**参考**：蝴蝶图的形状参考维基条目引用的 `DIT-FFT-butterfly.svg`；算法结构描述见 `reference/Fast-Fourier-transform.wiki` 的 Cooley–Tukey 段。
+**参考**：蝴蝶图的形状参考维基条目引用的 `DIT-FFT-butterfly.svg`；算法结构描述见 `Fast-Fourier-transform.wiki` 的 Cooley–Tukey 段。
 
 ---
 
@@ -349,7 +350,7 @@
 
 **目的**：讲清"被反复重新发现"这件事。
 
-**画面**：一条从左到右的时间轴，四个钉子：1805 · 1942 · 1958 · 1965，每个钉子下方列出「谁 + 做了什么」（全部出典见 `reference/Fast-Fourier-transform.wiki` 的 History 段）。
+**画面**：一条从左到右的时间轴，四个钉子：1805 · 1942 · 1958 · 1965，每个钉子下方列出「谁 + 做了什么」（全部出典见 `Fast-Fourier-transform.wiki` 的 History 段）。
 
 | 年 | 内容 |
 | --- | --- |
@@ -381,7 +382,7 @@
 > 所以像 FFTW 这样的库，做的事不太像"实现算法"，倒更像"在成千上万种等价分解里搜一条最快的路"。
 > 理论给你 Θ(n log n)，工程决定前面那个常数是多少。
 
-**参考**：`reference/Fast-Fourier-transform.wiki` Definition 段结尾与 Computational issues 段（Frigo & Johnson 2005）。
+**参考**：`Fast-Fourier-transform.wiki` 的 Definition 段结尾与 Computational issues 段（Frigo & Johnson 2005）。
 
 ## 4.3 `DFTvsFT` · ~0:50
 
@@ -416,7 +417,7 @@
 > 图像压缩、音频压缩、4G 和 5G 的 OFDM、快速卷积、某些差分方程的求解、甚至 Shor 算法里的量子傅里叶变换——
 > 底下都是同一张蝴蝶图。
 
-**参考**：`reference/Fast-Fourier-transform.wiki` 的 Applications 与 Telecommunications 两段。
+**参考**：`Fast-Fourier-transform.wiki` 的 Applications 与 Telecommunications 两段。
 
 ## 4.5 `NumberTheoreticTransform` · ~0:50
 

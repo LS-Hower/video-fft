@@ -1,0 +1,14 @@
+# 依赖全部从网络安装，不需要本机的 ../reference/ 目录。
+# Python 3.13 + Windows（见 AGENTS.md §1）。
+
+# 3b1b/manim 固定在与本项目场景代码一致的 commit（出处见 materials.md）。
+# 不要用 PyPI 的 manimgl==1.7.2：那是 2024-12 的发布版，API 与本项目依据的
+# 2026-09 源码不是同一套，且在 Python 3.13 下 import 直接失败
+# （pkg_resources 已移除；pydub 依赖的 pyaudioop 在 3.13 也已删除）。
+git+https://github.com/3b1b/manim.git@fafa083a4fb274bba9cabde0b6e2f50ba6da0622
+
+# 上游依赖没带齐，必须显式补；缺了会在 import manimlib 时报 No module named 'av'。
+av>=19.0
+
+# utils/fft.py 与场景里直接用到。
+numpy>=2.0
