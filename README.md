@@ -22,6 +22,9 @@ python -m manimlib --version      # ManimGL v1.7.2
 - 开发约定（命令、代码规范、事实核查、许可）：[`AGENTS.md`](AGENTS.md)
 - 内容唯一事实源：[`scripts/manual_script.md`](scripts/manual_script.md)
 - 制作约定（符号、章节↔场景映射、素材占位符）：[`scripts/production_notes.md`](scripts/production_notes.md)
+- 协作状态、待办与未定决定：[`STATUS.md`](STATUS.md)
+- 实现期踩坑与验证方法：[`docs/engineering_notes.md`](docs/engineering_notes.md)
 - 参考资料出处、固定 commit 与许可：[`materials.md`](materials.md)
 
-渲染产物落在 `videos/`，不进 commit。
+六章共 14 个场景已实现，当前阶段是复核、打磨与素材替换；进度与待办见 `STATUS.md`。
+渲染产物落在 `videos/`，不进 commit，成片需自行渲染。

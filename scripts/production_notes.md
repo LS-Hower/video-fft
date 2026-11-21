@@ -30,24 +30,32 @@
 
 ## 渲染与拼接
 
-单场渲染（低清预览，`videos/` 不进仓库）：
+档位：`-l` 480p、`-m` 720p、`--hd` 1080p、`--uhd` 4K。`custom_config.yml` 默认
+1920×1080 @ 30fps，成片用 `--hd`。`videos/` 不进仓库。
+
+单场与整章（低清预览）：
 
 ```bash
-python -m manimlib scenes/ch03_algorithm.py SplitEvenOdd -a -l -w
+python -m manimlib scenes/ch03_algorithm.py SplitEvenOdd -l -w   # 单场
+python -m manimlib scenes/ch03_algorithm.py -a -l -w             # 整章
 ```
 
-整章：
+1080p 成片：按文件逐个渲染，再把上表各场景按顺序拼接。
 
 ```bash
-python -m manimlib scenes/ch03_algorithm.py -a -l -w
+for f in ch00_opening ch01_complex ch02_motivation ch03_algorithm ch04_background ch05_closing; do
+  python -m manimlib scenes/$f.py -a --hd -w
+done
+ffmpeg -f concat -safe 0 -i videos/concat.txt -c copy videos/fft_full_hd.mp4
 ```
 
-成片把上表各场景按顺序拼起来即可，`ffmpeg -f concat` 就够，顺序以本表为准。
+`concat.txt` 放在 `videos/` 内，`file` 路径写同目录下的文件名（不要带 `videos/` 前缀）；
+各段必须同分辨率同帧率才能 `-c copy`。抽帧验证与拼接细节见 `docs/engineering_notes.md`。
 
 ## 素材占位符
 
-- 目录沿用 `custom_config.yml`：`assets/raster_images/`（配图、肖像）、`assets/vector_images/`、`assets/data/`。
-- 不放假图进仓库：占位符是虚线边框矩形 + 居中文字「素材名 / 待补」，由 `utils/` 里的工厂函数生成（随第一个用到素材的场景一起实现）；素材到位后替换为 `ImageMobject(path)`。场景里不硬写素材路径。
+- 目录沿用 `custom_config.yml`：`assets/raster_images/`（配图、肖像）、`assets/vector_images/`、`assets/data/`。仓库用 `.gitkeep` 占位，clone 后直接可用。
+- 不放假图进仓库：占位符是虚线边框矩形 + 居中文字「素材名 / 待补」，由 `utils/mobjects.py` 的 `get_placeholder()` 生成；素材到位后替换为 `ImageMobject(path)`。场景里不硬写素材路径。
 - 命名 `<章节>_<用途>_<序号>.png`（如 `ch00_ft_app_01.png`），肖像 `portrait_<姓>.png`。
 - `assets/CREDITS.md` 记每个正式素材的来源 URL、许可与商用状态；public 仓库里许可未确认的素材一律保持占位符、不进 commit。
 
@@ -61,3 +69,5 @@ python -m manimlib scenes/ch03_algorithm.py -a -l -w
 ## 其他
 
 - 涉及人名、年份、复杂度数字时按 `AGENTS.md` §7 核查出处，查不到标 `[待核]`。
+- 已知问题：代码展示章把 223 行一次铺满一屏、字号 10，1080p 下锐利但偏小。
+  是否重排属未定决定，见 `STATUS.md`；在拍板前不要改 `scenes/ch05_closing.py` 的节奏。

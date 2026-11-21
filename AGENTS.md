@@ -4,6 +4,7 @@
 
 `scripts/manual_script.md` 是内容的事实源：章节结构、讲解要点与节奏指示都在那里，代码是它的实现。要改内容边界，先改脚本；镜头与讲解文字在实现场景时决定，脚本不预设时长、不写分镜。
 制作对齐信息（符号约定、章节 ↔ 场景映射、素材占位符、事实核查指针）见 `scripts/production_notes.md`。
+协作状态、待办与尚未拍板的决定见 `STATUS.md`；实现期踩坑与验证方法见 `docs/engineering_notes.md`。
 本机的 `../reference/` 若存在，只是一份可选的只读资料快照，**不是项目依赖**；clone 本仓库不需要它，也不要改动其中文件。资料出处与固定 commit 见 `materials.md`。
 
 ---
@@ -34,6 +35,9 @@ python -m manimlib --version      # ManimGL v1.7.2
 ```
 ├── README.md              # 入口、上手命令
 ├── AGENTS.md              # 开发约定
+├── STATUS.md              # 当前进度、待办、未定决定
+├── docs/
+│   └── engineering_notes.md  # 实现期踩坑与验证方法
 ├── scripts/
 │   ├── manual_script.md    # 内容脚本（唯一事实源）
 │   └── production_notes.md  # 制作约定：符号、章节↔场景映射、素材占位符
@@ -45,8 +49,15 @@ python -m manimlib --version      # ManimGL v1.7.2
 │   ├── fft.py             # 朴素 DFT、radix-2 FFT、位反转、NTT（与 np.fft 自检）
 │   └── mobjects.py        # 单位圆盘、蝴蝶图、系数表等构件工厂
 ├── scenes/                # 章节 ↔ 文件名对应见 scripts/production_notes.md
-│   └── ch01_complex.py    # 复数几何、欧拉公式、单位根性质（现有）
-├── assets/                # 图片 / SVG / 数据
+│   ├── ch00_opening.py    # 引入：FT 应用墙
+│   ├── ch01_complex.py    # 数学基础：复数几何、欧拉公式、单位根
+│   ├── ch02_motivation.py # 动机：多项式表示 / 相乘 / DFT 与 FFT
+│   ├── ch03_algorithm.py  # 算法：分组 / butterfly / 递归树
+│   ├── ch04_background.py # 其他：技术补遗 / 人文时间线
+│   └── ch05_closing.py    # 代码展示
+├── assets/
+│   ├── CREDITS.md         # 素材来源与许可登记
+│   └── fft_example.cpp    # 结尾滚动的示例代码
 └── videos/                # 渲染产物，已 gitignore
 ```
 
@@ -152,7 +163,7 @@ python -m manimlib scenes/ch01_complex.py SceneX -w -n 3,6            # 只渲�
 
 ## 8. 制作流程
 
-1. 照 `scripts/manual_script.md` 写场景，不凭空加内容；需要改内容边界先改脚本。
+1. 照 `scripts/manual_script.md` 写场景，不凭空加内容；需要改内容边界先改脚本。**六章场景已全部实现**（映射见 `scripts/production_notes.md`），当前阶段以复核、打磨与替换素材为主，不要重复新建章节文件；待办见 `STATUS.md`。
 2. 先把 `utils/` 做扎实：`theme.py` 确认字体与配色可用，`fft.py` 实现并与 `np.fft` 对齐通过自检。
 3. 一次一个场景：`-l -s` 验构图 → `-l -w` 看运镜 → 最后用默认分辨率 `-w`。
 4. 场景类定名后回填 `scripts/production_notes.md` 的章节 ↔ 场景映射表，两边始终对齐。
@@ -160,7 +171,9 @@ python -m manimlib scenes/ch01_complex.py SceneX -w -n 3,6            # 只渲�
 
 ---
 
-## 9. 约定与待定
+## 9. 约定
+
+未定事项统一列在 `STATUS.md`，本节只记已经定下的约定。
 
 - **仅支持 Windows**，不做跨平台适配（理由见 §1）。协作者同平台；若将来要支持别的平台，先改 §1 与 `utils/theme.py` 的字体常量。
 - 依赖一律由 `requirements.txt` 从网络安装，不从本地 manim 仓库构建；项目不依赖 `../reference/`，资料出处见 `materials.md`。
