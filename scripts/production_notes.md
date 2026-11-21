@@ -17,16 +17,32 @@
 
 ## 章节 ↔ 场景文件
 
-| 章节 | 场景文件 | 状态 |
+| 章节 | 场景文件 | 场景类（成片顺序） |
 | --- | --- | --- |
-| 引入：FT 应用墙 | `scenes/ch00_opening.py` | 已有 `FTApplications` |
-| 数学基础（复数运算 / 欧拉公式 / 单位复数根） | `scenes/ch01_complex.py` | 已有四场，按本约定复核 |
-| FFT 的动机（多项式表示 / 相乘 / DFT 与 FFT） | `scenes/ch02_motivation.py` | 待实现 |
-| 算法：递归分治 | `scenes/ch03_algorithm.py` | 待实现，视频重点 |
-| 其他内容（技术 / 人文） | `scenes/ch04_background.py` | 待实现，从简 |
-| 代码展示 | `scenes/ch05_closing.py` | 待实现 |
+| 引入：FT 应用墙 | `scenes/ch00_opening.py` | `FTApplications` |
+| 数学基础（复数运算 / 欧拉公式 / 单位复数根） | `scenes/ch01_complex.py` | `ProductAsRotation` `QuotientGeometry` `EulerFormula` `RootsOfUnity` |
+| FFT 的动机（多项式表示 / 相乘 / DFT 与 FFT） | `scenes/ch02_motivation.py` | `PolynomialRepresentations` `PolynomialMultiplication` `DFTAndFFT` |
+| 算法：递归分治 | `scenes/ch03_algorithm.py` | `SplitEvenOdd` `ButterflyCombine` `RecursionTree`（视频重点） |
+| 其他内容（技术 / 人文） | `scenes/ch04_background.py` | `TechRecap` `HumanStory`（从简） |
+| 代码展示 | `scenes/ch05_closing.py` | `RollingCode` |
 
 场景类在文件中的排列顺序 = 成片顺序；类定名后回填本表。
+
+## 渲染与拼接
+
+单场渲染（低清预览，`videos/` 不进仓库）：
+
+```bash
+python -m manimlib scenes/ch03_algorithm.py SplitEvenOdd -a -l -w
+```
+
+整章：
+
+```bash
+python -m manimlib scenes/ch03_algorithm.py -a -l -w
+```
+
+成片把上表各场景按顺序拼起来即可，`ffmpeg -f concat` 就够，顺序以本表为准。
 
 ## 素材占位符
 
