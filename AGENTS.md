@@ -2,7 +2,7 @@
 
 讲快速傅里叶变换（FFT）的中文科普视频。用 3b1b 版 Manim（`manimgl`，不是 ManimCommunity）写场景代码并渲染成片。
 
-`scripts/manual_script.md` 是内容的事实源：章节结构、讲解要点与节奏指示都在那里，代码是它的实现。要改内容边界，先改脚本；镜头与旁白在实现场景时决定，脚本不预设时长、不写分镜。
+`scripts/manual_script.md` 是内容的事实源：章节结构、讲解要点与节奏指示都在那里，代码是它的实现。要改内容边界，先改脚本；镜头与讲解文字在实现场景时决定，脚本不预设时长、不写分镜。
 制作对齐信息（符号约定、章节 ↔ 场景映射、素材占位符、事实核查指针）见 `scripts/production_notes.md`。
 本机的 `../reference/` 若存在，只是一份可选的只读资料快照，**不是项目依赖**；clone 本仓库不需要它，也不要改动其中文件。资料出处与固定 commit 见 `materials.md`。
 
@@ -166,6 +166,6 @@ python -m manimlib scenes/ch01_complex.py SceneX -w -n 3,6            # 只渲�
 - 依赖一律由 `requirements.txt` 从网络安装，不从本地 manim 仓库构建；项目不依赖 `../reference/`，资料出处见 `materials.md`。
 - **不预设时长**；节奏按 `scripts/manual_script.md` 的指示性标注执行，不为贴合时长砍内容。
 - 单支，不成系列。
-- 全中文解说，公式保留拉丁/希腊符号；中文文本字体由 `utils/theme.py` 的 `CH_FONT` 统一决定。
+- 全中文讲解文字，公式保留拉丁/希腊符号；中文文本字体由 `utils/theme.py` 的 `CH_FONT` 统一决定。
 - 一次一个场景推进；「其他内容」一章允许先用较简单的静态镜头，后期再补。
-- 暂不做配音，只出字幕；字幕文本在实现场景时按对应章节撰写，不预先写死。
+- **不做配音**，讲解全部由视频内文字承载；文字是唯一讲解通道，文案在实现场景时按对应章节撰写，不预先写死。细则见 `scripts/production_notes.md`。

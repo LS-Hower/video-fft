@@ -118,7 +118,7 @@ def get_root_labels(plane, n: int, sign: float = 1.0, color=ROOT_COLOR, font_siz
 # ------------------------------------------------------------------ 文字
 
 def get_caption(text: str, font_size=LABEL, color=GREY_B):
-    """底部字幕占位。字幕文本在实现场景时按 scripts/manual_script.md 对应章节撰写。"""
+    """屏幕底部一行讲解文字的占位。不配音，文字即讲解；文案在实现场景时按 scripts/manual_script.md 对应章节撰写。"""
     return Text(text, font=CH_FONT, font_size=font_size, color=color).to_edge(DOWN, buff=0.35)
 
 

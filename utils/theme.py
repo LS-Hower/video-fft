@@ -8,7 +8,7 @@ import manimpango
 
 # ------------------------------------------------------------------ 字体
 
-CH_FONT = "Microsoft YaHei"   # 中文解说文本，本机已确认存在
+CH_FONT = "Microsoft YaHei"   # 中文讲解文字，本机已确认存在
 EN_FONT = "Consolas"          # 代码/英文标签
 
 if CH_FONT not in manimpango.list_fonts():
