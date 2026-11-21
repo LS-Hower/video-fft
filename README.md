@@ -20,7 +20,8 @@ python -m manimlib --version      # ManimGL v1.7.2
 ## 项目约定
 
 - 开发约定（命令、代码规范、事实核查、许可）：[`AGENTS.md`](AGENTS.md)
-- 内容唯一事实源：[`script.md`](script.md)；原始草稿：[`script_raw.md`](script_raw.md)
+- 内容唯一事实源：[`scripts/manual_script.md`](scripts/manual_script.md)
+- 制作约定（符号、章节↔场景映射、素材占位符）：[`scripts/production_notes.md`](scripts/production_notes.md)
 - 参考资料出处、固定 commit 与许可：[`materials.md`](materials.md)
 
 渲染产物落在 `videos/`，不进 commit。

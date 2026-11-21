@@ -2,7 +2,8 @@
 
 讲快速傅里叶变换（FFT）的中文科普视频。用 3b1b 版 Manim（`manimgl`，不是 ManimCommunity）写场景代码并渲染成片。
 
-`script.md` 是内容的事实源：镜头设计、数学推导、口播文本都在那里，代码是它的实现。要改镜头，先改脚本。
+`scripts/manual_script.md` 是内容的事实源：章节结构、讲解要点与节奏指示都在那里，代码是它的实现。要改内容边界，先改脚本；镜头与旁白在实现场景时决定，脚本不预设时长、不写分镜。
+制作对齐信息（符号约定、章节 ↔ 场景映射、素材占位符、事实核查指针）见 `scripts/production_notes.md`。
 本机的 `../reference/` 若存在，只是一份可选的只读资料快照，**不是项目依赖**；clone 本仓库不需要它，也不要改动其中文件。资料出处与固定 commit 见 `materials.md`。
 
 ---
@@ -33,8 +34,9 @@ python -m manimlib --version      # ManimGL v1.7.2
 ```
 ├── README.md              # 入口、上手命令
 ├── AGENTS.md              # 开发约定
-├── script.md              # 内容脚本（唯一事实源）
-├── script_raw.md          # 原始草稿，仅存档
+├── scripts/
+│   ├── manual_script.md    # 内容脚本（唯一事实源）
+│   └── production_notes.md  # 制作约定：符号、章节↔场景映射、素材占位符
 ├── materials.md           # 参考资料出处、固定 commit、许可
 ├── requirements.txt       # 依赖（从网络安装）
 ├── custom_config.yml
@@ -42,13 +44,8 @@ python -m manimlib --version      # ManimGL v1.7.2
 │   ├── theme.py           # 颜色 / 字号 / 中英文字体常量
 │   ├── fft.py             # 朴素 DFT、radix-2 FFT、位反转、NTT（与 np.fft 自检）
 │   └── mobjects.py        # 单位圆盘、蝴蝶图、系数表等构件工厂
-├── scenes/
-│   ├── ch00_opening.py
-│   ├── ch01_complex.py    # 复数几何、欧拉公式、单位根性质
-│   ├── ch02_motivation.py # 多项式两种表示、卷积、DFT 定义
-│   ├── ch03_algorithm.py  # 分治 → 蝴蝶 → 迭代 → FFT 电路
-│   ├── ch04_background.py # 历史、FFTW、FT 用途、NTT、大整数乘法、新成果
-│   └── ch05_closing.py
+├── scenes/                # 章节 ↔ 文件名对应见 scripts/production_notes.md
+│   └── ch01_complex.py    # 复数几何、欧拉公式、单位根性质（现有）
 ├── assets/                # 图片 / SVG / 数据
 └── videos/                # 渲染产物，已 gitignore
 ```
@@ -146,7 +143,7 @@ python -m manimlib scenes/ch01_complex.py SceneX -w -n 3,6            # 只渲�
 
 ## 7. 事实核查
 
-1. 历史、人名、年份、复杂度数字必须能在 `materials.md` 列出的维基 wikitext / 预印本原文里定位到出处；查不到就在 `script.md` 里标 `[待核]`，不凭印象写。
+1. 历史、人名、年份、复杂度数字必须能在 `materials.md` 列出的维基 wikitext / 预印本原文里定位到出处；查不到就在 `scripts/manual_script.md` 里标 `[待核]`，不凭印象写。
 2. 预印本就说预印本 —— 用"作者宣称 / 尚待同行评议"，禁止写"已证明""已被突破"。
 3. 提 2026-09-25 那份 OpenAI 预印本时，三条限定必须同时交代：精确复数运算模型允许任意大中间系数；常数极大、没有可用的 crossover 估计；不意味着浮点实现或实际算力有相应提升。
 4. 上界与下界不许混用。Ω(n log n) 下界只在受限模型下成立（Morgenstern 1973 有界系数、Pan 1986 异步度、Papadimitriou 1979 算法图结构），无条件下界仍是开放问题；那份预印本攻的是**上界**。
@@ -155,10 +152,10 @@ python -m manimlib scenes/ch01_complex.py SceneX -w -n 3,6            # 只渲�
 
 ## 8. 制作流程
 
-1. 照 `script.md` 写场景，不凭空加镜头；需要改镜头先改脚本。
+1. 照 `scripts/manual_script.md` 写场景，不凭空加内容；需要改内容边界先改脚本。
 2. 先把 `utils/` 做扎实：`theme.py` 确认字体与配色可用，`fft.py` 实现并与 `np.fft` 对齐通过自检。
 3. 一次一个场景：`-l -s` 验构图 → `-l -w` 看运镜 → 最后用默认分辨率 `-w`。
-4. 场景类定名后回填 `script.md` 相应小节标题，两边始终对齐。
+4. 场景类定名后回填 `scripts/production_notes.md` 的章节 ↔ 场景映射表，两边始终对齐。
 5. 渲染产物只落在 `videos/`，不进 commit。
 
 ---
@@ -167,8 +164,8 @@ python -m manimlib scenes/ch01_complex.py SceneX -w -n 3,6            # 只渲�
 
 - **仅支持 Windows**，不做跨平台适配（理由见 §1）。协作者同平台；若将来要支持别的平台，先改 §1 与 `utils/theme.py` 的字体常量。
 - 依赖一律由 `requirements.txt` 从网络安装，不从本地 manim 仓库构建；项目不依赖 `../reference/`，资料出处见 `materials.md`。
-- 视频时长当前估算 ≈ 22 分钟（主干 16 分 + 背景 5 分 + 头尾 1 分），**仅用于排布参考**：制作过程中按内容需要随时调整，不要为了贴合时长砍内容；有变动就同步更新 `script.md` 的时长标注。
+- **不预设时长**；节奏按 `scripts/manual_script.md` 的指示性标注执行，不为贴合时长砍内容。
 - 单支，不成系列。
 - 全中文解说，公式保留拉丁/希腊符号；中文文本字体由 `utils/theme.py` 的 `CH_FONT` 统一决定。
-- 第一版先把第 1–3 章做完整；第 4 章（背景）允许先用较简单的静态镜头，后期再补。
-- 暂不做配音，只出字幕；字幕文本以 `script.md` 的旁白稿为准。
+- 一次一个场景推进；「其他内容」一章允许先用较简单的静态镜头，后期再补。
+- 暂不做配音，只出字幕；字幕文本在实现场景时按对应章节撰写，不预先写死。

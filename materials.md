@@ -17,4 +17,4 @@ manimgl 由 `requirements.txt` 从网络安装，不需要 clone 下列任何仓
 - 维基条目：`https://en.wikipedia.org/wiki/Fast_Fourier_transform`。本地留存的是该条目的 wikitext
   （`Fast-Fourier-transform.wiki`）；所有年份、人名、复杂度数字以此为准。
 - OpenAI 预印本（2026-09-25）：`https://github.com/openai/math/tree/main/preprints/An-explicit-power-saving-for-the-exact-discrete-Fourier-transform-September-25-2026`，
-  主定理在 `build/sections/introduction.tex`。**预印本、尚待同行评议**；攻的是上界而非下界（见 `script_raw.md` 勘误）。
+  主定理在 `build/sections/introduction.tex`。**预印本、尚待同行评议**，措辞要求见 `AGENTS.md` §7。
