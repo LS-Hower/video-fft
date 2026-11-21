@@ -44,6 +44,21 @@ def plane_unit(plane: ComplexPlane) -> float:
     return float(np.linalg.norm(plane.n2p(1) - plane.n2p(0)))
 
 
+def get_axes(
+    x_range=(0, 4, 1),
+    y_range=(0, 10, 1),
+    width: float = 7.0,
+    height: float = 3.4,
+    **kwargs,
+) -> Axes:
+    """多项式图用的直角坐标系。复平面请用 `get_plane()`，两者不要混。"""
+    style = dict(
+        axis_config=dict(stroke_color=GREY_B, stroke_width=2),
+    )
+    style.update(kwargs)
+    return Axes(x_range, y_range, width=width, height=height, **style)
+
+
 def get_unit_circle(plane, color=MUTED, stroke_width=2, opacity=0.9):
     return Circle(
         radius=plane_unit(plane),
