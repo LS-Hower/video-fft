@@ -115,6 +115,54 @@ def get_root_labels(plane, n: int, sign: float = -1.0, color=ROOT_COLOR, font_si
     return labels
 
 
+# ------------------------------------------------------------------ 素材占位
+
+def get_placeholder(
+    name: str,
+    width: float = 2.4,
+    height: float = 1.4,
+    color=MUTED,
+    label=None,
+    sub_label=None,
+    font_size=TINY,
+):
+    """素材占位符：虚线圆角框 + 居中文字。
+
+    约定见 `scripts/production_notes.md`：不往仓库里放假图，占位符本身就是可见的
+    「待补」标记。素材到位后把整个 mobject 换成 `ImageMobject(path)` 即可，调用处
+    的结构（位置、尺寸、动画）不用改。
+
+    `label` 省略时显示「<name> / 待补」；`sub_label` 是第二行（英文名、来源等）。
+    """
+    frame = DashedVMobject(
+        RoundedRectangle(
+            width=width,
+            height=height,
+            corner_radius=0.18,
+            stroke_color=color,
+            stroke_width=1.8,
+        ),
+        num_dashes=40,
+    )
+    lines = [Text(
+        label if label is not None else f"{name} / 待补",
+        font=CH_FONT,
+        font_size=font_size,
+        color=color,
+    )]
+    if sub_label is not None:
+        lines.append(Text(sub_label, font=EN_FONT, font_size=TINY, color=color))
+    body = VGroup(*lines)
+    if len(lines) > 1:
+        body.arrange(DOWN, buff=0.10)
+    # 文字不许顶破虚线框
+    max_width = width - 0.32
+    if body.get_width() > max_width:
+        body.scale(max_width / body.get_width())
+    body.move_to(frame)
+    return VGroup(frame, body)
+
+
 # ------------------------------------------------------------------ 文字
 
 def get_caption(text: str, font_size=LABEL, color=GREY_B):
