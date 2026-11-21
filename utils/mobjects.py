@@ -91,19 +91,19 @@ def get_angle_arc(plane, z, radius=0.6, color=ACCENT, stroke_width=3):
 
 # ------------------------------------------------------------------ 单位根
 
-def get_nth_roots(n: int, sign: float = 1.0) -> np.ndarray:
-    """n 个单位根 ω_n^k。数值一律取自 utils.fft，不在这里另算。"""
+def get_nth_roots(n: int, sign: float = -1.0) -> np.ndarray:
+    """n 个单位根 ω_n^k。数值一律取自 utils.fft，默认与 DFT / np.fft 同为负号。"""
     return roots_of_unity(n, sign=sign)
 
 
-def get_root_dots(plane, n: int, sign: float = 1.0, color=ROOT_COLOR, radius=0.09):
+def get_root_dots(plane, n: int, sign: float = -1.0, color=ROOT_COLOR, radius=0.09):
     return VGroup(*[
         get_complex_dot(plane, z, color=color, radius=radius)
         for z in get_nth_roots(n, sign)
     ])
 
 
-def get_root_labels(plane, n: int, sign: float = 1.0, color=ROOT_COLOR, font_size=SMALL_LABEL):
+def get_root_labels(plane, n: int, sign: float = -1.0, color=ROOT_COLOR, font_size=SMALL_LABEL):
     """ω^0 … ω^{n-1} 的标签，一律朝远离原点的方向摆。"""
     labels = VGroup()
     for k, z in enumerate(get_nth_roots(n, sign)):
@@ -120,6 +120,57 @@ def get_root_labels(plane, n: int, sign: float = 1.0, color=ROOT_COLOR, font_siz
 def get_caption(text: str, font_size=LABEL, color=GREY_B):
     """屏幕底部一行讲解文字的占位。不配音，文字即讲解；文案在实现场景时按 scripts/manual_script.md 对应章节撰写。"""
     return Text(text, font=CH_FONT, font_size=font_size, color=color).to_edge(DOWN, buff=0.35)
+
+
+class NarrationBoard:
+    """不配音时承载全部讲解的屏幕文字板，位于画面底部。
+
+    用法（场景内）::
+
+        note = NarrationBoard(self)
+        note.say("完整的一句讲解")   # 淡入 + 停留到能读完
+        self.play(几何动画)          # 文字静止后再动，避免同时既读又动
+        note.say("下一句讲解")       # 旧的淡出、新的淡入
+        note.clear()                 # 结论公式出现前腾出底部位置
+
+    ``hold`` 是留给观众的阅读时间，长句可逐句调大。文字与结论公式共用底部区域，
+    二者不得同时出现 —— 出公式前先 clear()。
+    """
+
+    def __init__(self, scene, font_size=NARRATION, color=GREY_B):
+        self.scene = scene
+        self.font_size = font_size
+        self.color = color
+        self.current = None
+
+    def _make(self, text: str):
+        line = Text(text, font=CH_FONT, font_size=self.font_size, color=self.color)
+        # 长句保护：超过安全宽度就等比缩字，宁可小一点也不能顶出画面。
+        # 不配音时文字是唯一讲解通道，宁可断句也不让观众看不到半句话。
+        max_width = 2 * (FRAME_X_RADIUS - 0.7)
+        if line.get_width() > max_width:
+            line.scale(max_width / line.get_width())
+        line.to_edge(DOWN, buff=0.45)
+        # 半透明底衬压掉网格线：不配音时文字是唯一讲解通道，可读性优先
+        bg = BackgroundRectangle(line, fill_color=BLACK, fill_opacity=0.55, buff=0.16)
+        return VGroup(bg, line)
+
+    def say(self, text: str, hold: float = 2.5, run_time: float = 0.5):
+        new = self._make(text)
+        if self.current is None:
+            self.scene.play(FadeIn(new, UP), run_time=run_time)
+        else:
+            self.scene.play(
+                FadeOut(self.current, DOWN), FadeIn(new, UP), run_time=run_time,
+            )
+        self.current = new
+        self.scene.wait(hold)
+        return new
+
+    def clear(self, run_time: float = 0.4):
+        if self.current is not None:
+            self.scene.play(FadeOut(self.current, DOWN), run_time=run_time)
+            self.current = None
 
 
 def get_readout(

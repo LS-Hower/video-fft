@@ -8,11 +8,12 @@
 | --- | --- |
 | 单位根 | $\omega_n = \mathrm{e}^{-2\pi\mathrm{i}/n}$ |
 | DFT | $X_k = \sum_{m=0}^{n-1} x_m\,\omega_n^{km}$；逆变换改用正号并除以 $n$ |
-| 折半引理 | $\omega_n^{2k} = \omega_{n/2}^{k}$ |
-| 消去引理 | $\omega_n^{k+n/2} = -\omega_n^{k}$ |
+| 折半引理 | $(\omega_n^{k})^2 = \omega_{n/2}^{k}$ |
+| 半圈反号 | $\omega_n^{k+n/2} = -\omega_n^{k}$ |
+| 求和引理 | $\sum_{k=0}^{n-1}(\omega_n^{j})^{k} = 0 \quad (j \not\equiv 0 \bmod n)$ |
 | 全称 | DFT = 离散傅里叶变换 / Discrete Fourier Transform；FFT = 快速傅里叶变换 / Fast Fourier Transform（首次出现写中英文全名） |
 
-视频统一采用上表约定（与 `utils/fft.py`、`np.fft` 一致），画面上的 DFT/FFT 数值一律由 `utils/fft.py` 现算并与 `np.fft` 对照通过。`assets/fft_example.cpp` 采用相反约定（默认 $\mathrm{e}^{+2\pi\mathrm{i}/n}$ 作正变换），其内部自洽、结果等价；代码展示时用浮窗点明，不要改代码也不要混用两套数值。「数学基础」章的单位根几何图沿用现有场景的 `sign=+1`（同一组点、仅编号方向相反），从 DFT 起统一用负号。
+视频统一采用上表约定（与 `utils/fft.py`、`np.fft` 一致），画面上的 DFT/FFT 数值一律由 `utils/fft.py` 现算并与 `np.fft` 对照通过。`assets/fft_example.cpp` 采用相反约定（默认 $\mathrm{e}^{+2\pi\mathrm{i}/n}$ 作正变换），其内部自洽、结果等价；代码展示时用浮窗点明，不要改代码也不要混用两套数值。**全片（含「数学基础」章）统一用负号 `sign=-1`**，点集与逆时针编号完全相同、仅 ω^k 的编号方向相反，几何演示无损。剧本里「折半引理、消去引理等」是举例，讲解按上表式子说清性质即可，不强行贴术语名。
 
 ## 章节 ↔ 场景文件
 

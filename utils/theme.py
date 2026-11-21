@@ -19,6 +19,7 @@ if CH_FONT not in manimpango.list_fonts():
 HEADING = 60        # 章节标题
 KEY_FORMULA = 48    # 主角公式
 LABEL = 36          # 一般标签
+NARRATION = 32      # 讲解文字（不配音时承载全部讲解，全片统一）
 SMALL_LABEL = 24    # 单位圆/坐标轴标注
 TINY = 18           # 脚注、下标说明
 
